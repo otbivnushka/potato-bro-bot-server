@@ -5,5 +5,5 @@ export class UpdateCharacterDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
-  characterId?: number;
+  character_id?: number;
 }

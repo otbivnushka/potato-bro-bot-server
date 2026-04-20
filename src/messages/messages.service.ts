@@ -24,14 +24,30 @@ export class MessagesService {
       },
     });
 
+    const selectedCharactersPrompt = await this.prisma.userSettings.findUniqueOrThrow({
+      where: { user_id: userId },
+      select: {
+        character: {
+          select: {
+            prompt: true,
+          },
+        },
+      },
+    });
+
+    const prompt = selectedCharactersPrompt.character?.prompt || '';
+
     // отправляем событие о user message (опционально)
     res.write(`event: user\n`);
     res.write(`data: ${JSON.stringify(userMessage)}\n\n`);
 
     // 2. запускаем Gemini stream
     const stream = await ai.models.generateContentStream({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-2.5-flash-lite',
       contents: content,
+      config: {
+        systemInstruction: prompt,
+      },
     });
 
     let fullText = '';

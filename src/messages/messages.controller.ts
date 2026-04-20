@@ -1,7 +1,8 @@
-import { Controller, Post, Body, Param, Req, Res, Get } from '@nestjs/common';
+import { Controller, Post, Body, Param, Req, Res, Get, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto/create-message.dto';
+import { JwtGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('messages')
 export class MessagesController {
@@ -9,7 +10,7 @@ export class MessagesController {
 
   @Post('stream')
   async stream(@Req() req, @Res() res: Response, @Body() dto: CreateMessageDto) {
-    const userId = req.user?.user_id;
+    const userId = req.user?.user_id || 1;
 
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');

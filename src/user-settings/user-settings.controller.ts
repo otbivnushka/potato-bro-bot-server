@@ -21,6 +21,6 @@ export class UserSettingsController {
 
   @Patch('character')
   updateCharacter(@Req() req, @Body() dto: UpdateCharacterDto) {
-    return this.userSettingsService.updateCharacter(req.user.user_id, dto.characterId);
+    return this.userSettingsService.updateCharacter(req.user.user_id, dto.character_id);
   }
 }

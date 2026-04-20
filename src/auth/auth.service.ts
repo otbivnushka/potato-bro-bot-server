@@ -86,6 +86,7 @@ export class AuthService {
   }
 
   async logout(res: Response) {
+    res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     return { message: 'Выход выполнен' };
   }
@@ -113,6 +114,12 @@ export class AuthService {
 
     const refreshToken = this.jwt.sign(payload, {
       expiresIn: this.config.get('JWT_REFRESH_TOKEN_TTL'),
+    });
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
     });
 
     res.cookie('refreshToken', refreshToken, {
