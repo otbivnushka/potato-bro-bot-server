@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  user_id       Int            @id @default(autoincrement())
+  username      String         @unique @db.VarChar(100)
+  password_hash String
+
+  chats         Chat[]
+  settings      UserSettings?
+
+  @@map("users")
+}
+
+model Chat {
+  chat_id   Int       @id @default(autoincrement())
+  title     String    @default("New chat")
+
+  user_id   Int
+  user      User      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  messages  Message[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("chats")
+}
+
+model Message {
+  message_id Int      @id @default(autoincrement())
+
+  chat_id    Int
+  chat       Chat     @relation(fields: [chat_id], references: [chat_id], onDelete: Cascade)
+
+  role       MessageRole
+  content    String   @db.Text
+
+  createdAt  DateTime @default(now())
+
+  @@map("messages")
+}
+
+enum MessageRole {
+  user
+  bot
+}
+
+model UserSettings {
+  settings_id Int   @id @default(autoincrement())
+
+  user_id     Int   @unique
+  user        User  @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+
+  theme       String @default("light")
+
+  character_id Int?
+  character    Character? @relation(fields: [character_id], references: [id], onDelete: SetNull)
+
+  @@map("user_settings")
+}
+
+model Character {
+  id     Int    @id @default(autoincrement())
+  name   String
+  prompt String
+
+  users  UserSettings[]
+
+  @@map("characters")
+}
