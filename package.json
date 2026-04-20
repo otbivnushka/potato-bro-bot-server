@@ -45,7 +45,9 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger": "^0.7.5",
-    "types": "^0.1.1"
+    "types": "^0.1.1",
+    "potato-chat-engine": "file:../potato-chat-engine",
+    "logger": "file:../logger"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",

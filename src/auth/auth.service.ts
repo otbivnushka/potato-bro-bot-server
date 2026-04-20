@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { RegisterRequest } from './dto/register.dto';
 import * as argon2 from 'argon2';
@@ -7,10 +7,13 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './interfaces/jwt.interface';
 import { LoginRequest } from './dto/login.dto';
 import type { Response, Request } from 'express';
+import { Logger } from 'logger';
+import { LOGGER } from 'src/logger/logger.token';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(LOGGER) private readonly logger: Logger,
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
     private readonly jwt: JwtService,
@@ -55,7 +58,10 @@ export class AuthService {
     if (!valid) {
       throw new UnauthorizedException('Неверный пароль');
     }
-
+    this.logger.info('User authenticated', {
+      source: 'system',
+      meta: { id: user.user_id },
+    });
     return this.auth(res, user.user_id);
   }
 

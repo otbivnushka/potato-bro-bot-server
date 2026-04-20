@@ -6,6 +6,7 @@ import { ChatsModule } from './chats/chats.module';
 import { MessagesModule } from './messages/messages.module';
 import { CharactersModule } from './characters/characters.module';
 import { UserSettingsModule } from './user-settings/user-settings.module';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserSettingsModule } from './user-settings/user-settings.module';
     MessagesModule,
     CharactersModule,
     UserSettingsModule,
+    LoggerModule,
   ],
   controllers: [],
   providers: [],
